@@ -1,7 +1,7 @@
 variable "name_prefix" {
-  description = "This value is appended at the beginning of resource names."
+  description = "Prefix for all resource names. When set, replaces the auto-generated random prefix. When null, a random 4-character prefix is generated."
   type        = string
-  default     = "BedrockAgents"
+  default     = null
 }
 
 # – Bedrock Agent –
