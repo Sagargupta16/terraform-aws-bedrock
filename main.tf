@@ -6,6 +6,13 @@ resource "random_string" "solution_prefix" {
 
 locals {
   solution_prefix = var.name_prefix != null ? lower(var.name_prefix) : random_string.solution_prefix.result
+  # Merge default tags into resource-specific tags for awscc_* resources
+  # (aws_* resources inherit provider default_tags automatically, but awscc_* do not)
+  merged_tags           = var.tags
+  merged_agent_tags     = var.tags
+  merged_kb_tags        = var.kb_tags != null ? merge(var.tags, var.kb_tags) : var.tags
+  merged_alias_tags     = var.agent_alias_tags != null ? merge(var.tags, var.agent_alias_tags) : var.tags
+  merged_custom_model_tags = var.custom_model_tags != null ? merge(var.tags, var.custom_model_tags) : var.tags
 }
 
 # – Bedrock Agent –
@@ -99,7 +106,7 @@ resource "awscc_bedrock_agent" "bedrock_agent" {
   depends_on = [time_sleep.wait_for_inference_profile, time_sleep.wait_for_use_inference_profile_role_policy]
 
   customer_encryption_key_arn = var.kms_key_arn
-  tags                        = var.tags
+  tags                        = local.merged_agent_tags
   prompt_override_configuration = var.prompt_override == false ? null : {
     prompt_configurations = [{
       prompt_type = var.prompt_type
@@ -142,7 +149,7 @@ resource "awscc_bedrock_agent_alias" "bedrock_agent_alias" {
       agent_version = var.bedrock_agent_version
     }
   ]
-  tags = var.agent_alias_tags
+  tags = local.merged_alias_tags
 }
 
 resource "aws_bedrockagent_agent_alias" "bedrock_agent_alias" {
@@ -156,7 +163,7 @@ resource "aws_bedrockagent_agent_alias" "bedrock_agent_alias" {
       provisioned_throughput = var.bedrock_agent_alias_provisioned_throughput
     }
   ]
-  tags = var.agent_alias_tags
+  tags = local.merged_alias_tags
 }
 
 # Agent Collaborator 
@@ -283,7 +290,7 @@ resource "aws_bedrock_custom_model" "custom_model" {
   training_data_config {
     s3_uri = "s3://${var.custom_model_training_uri}"
   }
-  tags = var.custom_model_tags
+  tags = local.merged_custom_model_tags
 }
 
 resource "awscc_s3_bucket" "custom_model_output" {

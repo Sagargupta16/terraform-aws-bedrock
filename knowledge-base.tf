@@ -4,7 +4,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_default" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = "OPENSEARCH_SERVERLESS"
@@ -51,7 +51,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_mongo" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = var.kb_storage_type
@@ -101,7 +101,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_opensearch_managed" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = "OPENSEARCH_MANAGED_CLUSTER"
@@ -146,7 +146,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_opensearch" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = var.kb_storage_type
@@ -190,7 +190,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_neptune_analytics" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = "NEPTUNE_ANALYTICS"
@@ -232,7 +232,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_s3_vectors" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = "S3_VECTORS"
@@ -273,7 +273,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_pinecone" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = var.kb_storage_type
@@ -317,7 +317,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_rds" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   storage_configuration = {
     type = var.kb_storage_type
@@ -366,7 +366,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_kendra" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   knowledge_base_configuration = {
     type = "KENDRA"
@@ -385,7 +385,7 @@ resource "awscc_bedrock_knowledge_base" "knowledge_base_sql" {
   name        = "${random_string.solution_prefix.result}-${var.kb_name}"
   description = var.kb_description
   role_arn    = var.kb_role_arn != null ? var.kb_role_arn : aws_iam_role.bedrock_knowledge_base_role[0].arn
-  tags        = var.kb_tags
+  tags        = local.merged_kb_tags
 
   knowledge_base_configuration = {
     type = "SQL"

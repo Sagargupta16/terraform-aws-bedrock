@@ -54,9 +54,9 @@ variable "kms_key_arn" {
 }
 
 variable "tags" {
-  description = "Tag bedrock agent resource."
+  description = "Default tags applied to all taggable resources. Resource-specific tag variables (e.g., `kb_tags`, `guardrail_tags`) are merged on top of these defaults. For `aws_*` resources, provider `default_tags` apply automatically. For `awscc_*` resources, set this variable to propagate tags."
   type        = map(string)
-  default     = null
+  default     = {}
 }
 
 # – Orchestration Configuration –
