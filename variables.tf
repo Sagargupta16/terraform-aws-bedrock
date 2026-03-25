@@ -2056,9 +2056,15 @@ variable "permissions_boundary_arn" {
 }
 
 variable "agent_resource_role_arn" {
-  description = "Optional external IAM role ARN for the Bedrock agent resource role. If empty, the module will create one internally."
+  description = "Optional external IAM role ARN for the Bedrock agent resource role. If set, the module will use this role instead of creating one internally. Must also set `create_agent_role = false` to avoid count errors when the ARN is not known until apply time."
   type        = string
   default     = null
+}
+
+variable "create_agent_role" {
+  description = "Whether to create the agent IAM role. Set to false when providing `agent_resource_role_arn` to avoid 'count cannot be determined until apply' errors."
+  type        = bool
+  default     = true
 }
 
 # – MongoDB Atlas Configuration –

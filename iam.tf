@@ -4,31 +4,31 @@ locals {
   kendra_index_id               = var.create_kendra_config == true ? (var.kendra_index_id != null ? var.kendra_index_id : awscc_kendra_index.genai_kendra_index[0].id) : null
   kendra_data_source_bucket_arn = var.create_kendra_s3_data_source ? (var.kb_s3_data_source != null ? var.kb_s3_data_source : awscc_s3_bucket.s3_data_source[0].arn) : null
   action_group_names            = concat(var.action_group_lambda_names_list, [var.lambda_action_group_executor])
-  agent_role_name               = var.agent_resource_role_arn != null ? split("/", var.agent_resource_role_arn)[1] : ((var.create_agent || var.create_supervisor) ? aws_iam_role.agent_role[0].name : null)
+  agent_role_name               = var.create_agent_role == false ? (var.agent_resource_role_arn != null ? split("/", var.agent_resource_role_arn)[1] : null) : ((var.create_agent || var.create_supervisor) ? aws_iam_role.agent_role[0].name : null)
   kb_embedding_model_arn        = replace(replace(var.kb_embedding_model_arn, "arn:aws", "arn:${local.partition}"), "us-east-1", local.region)
 }
 
 resource "aws_iam_role" "agent_role" {
-  count                = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  count                = var.create_agent_role && (var.create_agent || var.create_supervisor) ? 1 : 0
   assume_role_policy   = data.aws_iam_policy_document.agent_trust[0].json
   name_prefix          = local.solution_prefix
   permissions_boundary = var.permissions_boundary_arn
 }
 
 resource "aws_iam_role_policy" "agent_policy" {
-  count  = var.agent_resource_role_arn == null && (var.create_agent || var.create_supervisor) ? 1 : 0
+  count  = var.create_agent_role && (var.create_agent || var.create_supervisor) ? 1 : 0
   policy = data.aws_iam_policy_document.agent_permissions[0].json
   role   = local.agent_role_name
 }
 
 resource "aws_iam_role_policy" "agent_alias_policy" {
-  count  = var.agent_resource_role_arn == null && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
+  count  = var.create_agent_role && (var.create_agent_alias || var.create_supervisor) ? 1 : 0
   policy = data.aws_iam_policy_document.agent_alias_permissions[0].json
   role   = local.agent_role_name
 }
 
 resource "aws_iam_role_policy" "kb_policy" {
-  count  = var.agent_resource_role_arn == null && local.create_kb && var.create_agent ? 1 : 0
+  count  = var.create_agent_role && local.create_kb && var.create_agent ? 1 : 0
   policy = data.aws_iam_policy_document.knowledge_base_permissions[0].json
   role   = local.agent_role_name
 }
