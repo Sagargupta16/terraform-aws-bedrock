@@ -8,7 +8,6 @@ locals {
   solution_prefix = var.name_prefix != null ? lower(var.name_prefix) : random_string.solution_prefix.result
   # Merge default tags into resource-specific tags for awscc_* resources
   # (aws_* resources inherit provider default_tags automatically, but awscc_* do not)
-  merged_tags           = var.tags
   merged_agent_tags     = var.tags
   merged_kb_tags        = var.kb_tags != null ? merge(var.tags, var.kb_tags) : var.tags
   merged_alias_tags     = var.agent_alias_tags != null ? merge(var.tags, var.agent_alias_tags) : var.tags
