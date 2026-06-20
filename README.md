@@ -752,7 +752,7 @@ See the additional input variables for deploying BDA projects and blueprints [he
 | <a name="input_agent_description"></a> [agent\_description](#input\_agent\_description) | A description of agent. | `string` | `null` | no |
 | <a name="input_agent_id"></a> [agent\_id](#input\_agent\_id) | Agent identifier. | `string` | `null` | no |
 | <a name="input_agent_name"></a> [agent\_name](#input\_agent\_name) | The name of your agent. | `string` | `"TerraformBedrockAgents"` | no |
-| <a name="input_agent_resource_role_arn"></a> [agent\_resource\_role\_arn](#input\_agent\_resource\_role\_arn) | Optional external IAM role ARN for the Bedrock agent resource role. If empty, the module will create one internally. | `string` | `null` | no |
+| <a name="input_agent_resource_role_arn"></a> [agent\_resource\_role\_arn](#input\_agent\_resource\_role\_arn) | Optional external IAM role ARN for the Bedrock agent resource role. If set, the module will use this role instead of creating one internally. Must also set `create_agent_role = false` to avoid count errors when the ARN is not known until apply time. | `string` | `null` | no |
 | <a name="input_allow_opensearch_public_access"></a> [allow\_opensearch\_public\_access](#input\_allow\_opensearch\_public\_access) | Whether or not to allow public access to the OpenSearch collection endpoint and the Dashboards endpoint. | `bool` | `true` | no |
 | <a name="input_api_schema_payload"></a> [api\_schema\_payload](#input\_api\_schema\_payload) | String OpenAPI Payload. | `string` | `null` | no |
 | <a name="input_api_schema_s3_bucket_name"></a> [api\_schema\_s3\_bucket\_name](#input\_api\_schema\_s3\_bucket\_name) | A bucket in S3. | `string` | `null` | no |
@@ -802,6 +802,7 @@ See the additional input variables for deploying BDA projects and blueprints [he
 | <a name="input_create_ag"></a> [create\_ag](#input\_create\_ag) | Whether or not to create an action group. | `bool` | `false` | no |
 | <a name="input_create_agent"></a> [create\_agent](#input\_create\_agent) | Whether or not to deploy an agent. | `bool` | `true` | no |
 | <a name="input_create_agent_alias"></a> [create\_agent\_alias](#input\_create\_agent\_alias) | Whether or not to create an agent alias. | `bool` | `false` | no |
+| <a name="input_create_agent_role"></a> [create\_agent\_role](#input\_create\_agent\_role) | Whether to create the agent IAM role. Set to false when providing `agent_resource_role_arn` to avoid 'count cannot be determined until apply' errors. | `bool` | `true` | no |
 | <a name="input_create_app_inference_profile"></a> [create\_app\_inference\_profile](#input\_create\_app\_inference\_profile) | Whether or not to create an application inference profile. | `bool` | `false` | no |
 | <a name="input_create_bda"></a> [create\_bda](#input\_create\_bda) | Whether or not to create a Bedrock data automatio project. | `bool` | `false` | no |
 | <a name="input_create_bedrock_data_automation_config"></a> [create\_bedrock\_data\_automation\_config](#input\_create\_bedrock\_data\_automation\_config) | Whether or not to create Bedrock Data Automation configuration for the data source. | `bool` | `false` | no |
@@ -921,7 +922,7 @@ See the additional input variables for deploying BDA projects and blueprints [he
 | <a name="input_max_pages"></a> [max\_pages](#input\_max\_pages) | Maximum number of pages the crawler can crawl. | `number` | `null` | no |
 | <a name="input_memory_configuration"></a> [memory\_configuration](#input\_memory\_configuration) | Configuration for agent memory storage | <pre>object({<br>    enabled_memory_types = optional(list(string))<br>    session_summary_configuration = optional(object({<br>      max_recent_sessions = optional(number)<br>    }))<br>    storage_days = optional(number)<br>  })</pre> | `null` | no |
 | <a name="input_metadata_field"></a> [metadata\_field](#input\_metadata\_field) | The name of the field in which Amazon Bedrock stores metadata about the vector store. | `string` | `"AMAZON_BEDROCK_METADATA"` | no |
-| <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | This value is appended at the beginning of resource names. | `string` | `"BedrockAgents"` | no |
+| <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Prefix for all resource names. When set, replaces the auto-generated random prefix. When null, a random 4-character prefix is generated. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | The namespace to be used to write new data to your pinecone database | `string` | `null` | no |
 | <a name="input_number_of_replicas"></a> [number\_of\_replicas](#input\_number\_of\_replicas) | The number of replica shards for the OpenSearch index. | `string` | `"1"` | no |
 | <a name="input_number_of_shards"></a> [number\_of\_shards](#input\_number\_of\_shards) | The number of shards for the OpenSearch index. This setting cannot be changed after index creation. | `string` | `"1"` | no |
@@ -986,7 +987,7 @@ See the additional input variables for deploying BDA projects and blueprints [he
 | <a name="input_supervisor_name"></a> [supervisor\_name](#input\_supervisor\_name) | The name of the supervisor. | `string` | `"TerraformBedrockAgentSupervisor"` | no |
 | <a name="input_supplemental_data_s3_uri"></a> [supplemental\_data\_s3\_uri](#input\_supplemental\_data\_s3\_uri) | The S3 URI for supplemental data storage. | `string` | `null` | no |
 | <a name="input_table_name"></a> [table\_name](#input\_table\_name) | The name of the table in the database. | `string` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tag bedrock agent resource. | `map(string)` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Default tags applied to all taggable resources. Resource-specific tag variables (e.g., `kb_tags`, `guardrail_tags`) are merged on top of these defaults. For `aws_*` resources, provider `default_tags` apply automatically. For `awscc_*` resources, set this variable to propagate tags. | `map(string)` | `{}` | no |
 | <a name="input_temperature"></a> [temperature](#input\_temperature) | The likelihood of the model selecting higher-probability options while generating a response. | `number` | `0` | no |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | The identifier of your Microsoft 365 tenant. | `string` | `null` | no |
 | <a name="input_text_field"></a> [text\_field](#input\_text\_field) | The name of the field in which Amazon Bedrock stores the raw text from your data. | `string` | `"AMAZON_BEDROCK_TEXT_CHUNK"` | no |
